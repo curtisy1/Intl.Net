@@ -23,11 +23,11 @@
     public static class SampleResourceStrings
     {
         private static JsonResourceManager? s_ResourceManager;
-        public static JsonResourceManager ResourceManager => s_ResourceManager ??= new JsonResourceManager(""Resources.SampleResourceStrings"", typeof(SampleResourceStrings).Assembly);
-        public static CultureInfo? CultureInfo { get; set; }
+        public static JsonResourceManager ResourceManager => s_ResourceManager ??= new JsonResourceManager(""Resources.SampleResourceStrings"", typeof(SampleResourceStrings).Assembly, ""SampleResourceStrings"");
+        public static CultureInfo? ResourceCulture { get; set; }
 
-        public static string CreateDate => ResourceManager.GetString(nameof(CreateDate), CultureInfo)!;
-        public static string CreateDateDescending => ResourceManager.GetString(nameof(CreateDateDescending), CultureInfo)!;
+        public static string CreateDate => ResourceManager.GetString(nameof(CreateDate), ResourceCulture)!;
+        public static string CreateDateDescending => ResourceManager.GetString(nameof(CreateDateDescending), ResourceCulture)!;
     }
 }");
       using var stream = new MemoryStream(Encoding.UTF8.GetBytes(text));

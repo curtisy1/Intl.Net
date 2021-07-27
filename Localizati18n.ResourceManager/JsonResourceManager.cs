@@ -2,6 +2,7 @@
   using System;
   using System.Collections.Concurrent;
   using System.Globalization;
+  using System.IO;
   using System.Linq;
   using System.Reflection;
   using System.Resources;
@@ -11,6 +12,8 @@
     private readonly ConcurrentDictionary<string, JsonResourceSet> resourceSetCache = new();
 
     public string FileName { get; }
+    
+    private string? ResourceDirectory => this.MainAssembly?.Location.Split("/").SkipLast(1).Aggregate((a, b) => $"{a}/{b}");
 
     public JsonResourceManager(string baseName, Assembly assembly, string fileName)
       : base(baseName, assembly) {
@@ -34,8 +37,18 @@
     }
 
     protected override string GetResourceFileName(CultureInfo culture) {
-      var resourceDirectory = this.MainAssembly?.Location.Split("/").SkipLast(1).Aggregate((a, b) => $"{a}/{b}");
-      return $"{resourceDirectory}/{this.FileName}{jsonExtension}";
+      var parentCulture = culture;
+
+      while (!string.IsNullOrEmpty(parentCulture.Name)) {
+        var possibleFileName = $"{this.ResourceDirectory}/{this.FileName}.{parentCulture.Name}{jsonExtension}";
+        if (File.Exists(possibleFileName)) {
+          return possibleFileName;
+        }
+        
+        parentCulture = parentCulture.Parent;
+      }
+
+      return $"{this.ResourceDirectory}/{this.FileName}{jsonExtension}";
     }
   }
 }

@@ -18,7 +18,7 @@
     private const string resourceNamespace = "Localizati18n.ResourceManager";
     private const string privateModifier = "s_";
     private const string resourceManagerVariable = "ResourceManager";
-    private const string cultureInfoVariable = "CultureInfo";
+    private const string cultureInfoVariable = "ResourceCulture";
 
     private readonly Stream resourceStream;
     private readonly GeneratorOptions options;

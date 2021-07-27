@@ -39,7 +39,7 @@
     }
 
     public void Execute(GeneratorExecutionContext context) {
-      context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", "Starting resource generation", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true, 1));
+      context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", "Starting resource generation", DiagnosticSeverity.Info, DiagnosticSeverity.Info, false, 2));
 
       if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.MSBuildProjectFullPath", out var projectFullPath)) {
         context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Error", "No project path to check", DiagnosticSeverity.Error, DiagnosticSeverity.Error, true, 0));
@@ -61,18 +61,17 @@
       }
       
       foreach (var resourceFile in resourceFiles) {
-        context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", $"Generating resource from file {resourceFile.Path}", DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
+        context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", $"Generating resource from file {resourceFile.Path}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, false, 2));
         using var stream = File.OpenRead(resourceFile.Path);
         var customToolNamespace = context.AnalyzerConfigOptions.GetOptions(resourceFile).GetValueOrDefault("build_metadata.EmbeddedResource.CustomToolNamespace");
         var className = Path.GetFileNameWithoutExtension(resourceFile.Path);
         var generatedNamespace = customToolNamespace ?? GetLocalNamespace(resourceFile.Path, projectFullPath, rootNamespace);
         
-        context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Warning", $"Generating resource using namespace {generatedNamespace} and classname {className}", DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
+        context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", $"Generating resource using namespace {generatedNamespace} and classname {className}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, false, 2));
 
         using var generator = new Generator(stream, new GeneratorOptions(generatedNamespace, className));
         var unit = generator.Generate();
-        context.AddSource($"{generatedNamespace}.{className}.cs", unit.ToFullString());
-        context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Warning", $"Generated resource {unit.ToFullString().Replace("\r", "").Replace("\n", "")}", DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
+        context.AddSource($"{className}.cs", unit.ToFullString());
       }
     }
 
