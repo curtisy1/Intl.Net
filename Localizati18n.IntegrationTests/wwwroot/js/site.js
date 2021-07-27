@@ -2,3 +2,13 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+document.onreadystatechange = () => {
+  if(document.readyState === "interactive" || document.readyState === "complete")  {
+    document.getElementById("cultureSelect").onchange = setLanguage;
+  }
+}
+
+async function setLanguage(e) {
+  await wretch("/Home/SetLanguage").formUrl({language: e.currentTarget.value}).post();
+}

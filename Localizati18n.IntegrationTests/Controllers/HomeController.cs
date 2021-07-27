@@ -1,10 +1,12 @@
 ﻿namespace Localizati18n.IntegrationTests.Controllers {
+  using System;
   using System.Diagnostics;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
   using Localizati18n.IntegrationTests.Models;
-  using Localization;
-  
+  using Microsoft.AspNetCore.Http;
+  using Microsoft.AspNetCore.Localization;
+
   public class HomeController : Controller {
     private readonly ILogger<HomeController> logger;
 
@@ -18,6 +20,17 @@
 
     public IActionResult Privacy() {
       return this.View();
+    }
+    
+    [HttpPost]
+    public IActionResult SetLanguage(string language) {
+      this.Response.Cookies.Append(
+        CookieRequestCultureProvider.DefaultCookieName,
+        CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(language)),
+        new CookieOptions { Expires = DateTimeOffset.UtcNow.AddMonths(1) }
+      );
+
+      return this.LocalRedirect("/" + this.ControllerContext.ActionDescriptor.ControllerName);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

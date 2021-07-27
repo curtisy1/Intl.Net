@@ -3,6 +3,9 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Localizati18n.IntegrationTests</RootNamespace>
+
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -30,5 +33,14 @@
 
     <!-- Manually reference the generator props because we locally reference the generator. When added via NuGet this happens automatically -->
     <Import Project="..\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.props" />
+
+    <ItemGroup>
+        <MySourceFiles Include="\home\curtisy\Projects\dotNet\Localizati18n\Localizati18n.IntegrationTests\obj\GeneratedFiles\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\*.cs"/>
+    </ItemGroup>
+
+    <Target Name="AfterBuild">
+        <Copy SourceFiles="$(MySourceFiles)" DestinationFolder="$(ProjectDir)" />
+    </Target>
+
 
 </Project>
