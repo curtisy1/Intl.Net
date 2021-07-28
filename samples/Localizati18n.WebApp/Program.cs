@@ -1,4 +1,4 @@
-namespace Localizati18n.IntegrationTests {
+namespace Localizati18n.WebApp {
   using System.Threading.Tasks;
   using Microsoft.AspNetCore.Hosting;
   using Microsoft.Extensions.Hosting;
