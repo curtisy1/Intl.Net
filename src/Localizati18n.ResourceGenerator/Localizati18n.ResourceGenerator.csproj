@@ -13,8 +13,8 @@
         <IncludeSymbols>false</IncludeSymbols>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <DevelopmentDependency>true</DevelopmentDependency>
-        <Version>1.0.0</Version>
-        <PackageVersion>1.0.0</PackageVersion>
+        <Version>1.0.1</Version>
+        <PackageVersion>1.0.1</PackageVersion>
     </PropertyGroup>
 
     <ItemDefinitionGroup>
