@@ -14,7 +14,8 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.302
+        dotnet-version: '6.0.x'
+        include-prerelease: true
         source-url: https://api.nuget.org/v3/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
@@ -25,8 +26,8 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Pack
-      run: dotnet pack -c Release Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.csproj
+      run: dotnet pack -c Release Localizati18n.ResourceGenerator/Localizati18n.ResourceGenerator.csproj
     - name: Publish
       env:
         NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
-      run: dotnet nuget push Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push Localizati18n.ResourceGenerator/Localizati18n.ResourceGenerator/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
