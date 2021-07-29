@@ -1,4 +1,4 @@
-namespace Localizati18n.IntegrationTests.Models {
+namespace Localizati18n.WebApp.Models {
   public class ErrorViewModel {
     public string RequestId { get; set; }
 

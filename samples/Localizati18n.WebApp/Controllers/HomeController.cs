@@ -1,9 +1,9 @@
-﻿namespace Localizati18n.IntegrationTests.Controllers {
+﻿namespace Localizati18n.WebApp.Controllers {
   using System;
   using System.Diagnostics;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
-  using Localizati18n.IntegrationTests.Models;
+  using Localizati18n.WebApp.Models;
   using Microsoft.AspNetCore.Http;
   using Microsoft.AspNetCore.Localization;
 

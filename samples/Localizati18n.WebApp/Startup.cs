@@ -1,4 +1,4 @@
-namespace Localizati18n.IntegrationTests {
+namespace Localizati18n.WebApp {
   using System.Collections.Generic;
   using System.Globalization;
   using Microsoft.AspNetCore.Builder;

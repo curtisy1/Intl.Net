@@ -27,12 +27,18 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build src/Localizati18n.ResourceGenerator/Localizati18n.ResourceGenerator.csproj --configuration Release --no-restore 
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-    - name: Pack
-      run: dotnet pack -c Release Localizati18n.ResourceGenerator/Localizati18n.ResourceGenerator.csproj
-    - name: Publish
+    - name: Pack Manager
+      run: dotnet pack -c Release src/Localizati18n.ResourceManager/Localizati18n.ResourceManager.csproj
+    - name: Pack Generator
+      run: dotnet pack -c Release src/Localizati18n.ResourceGenerator/Localizati18n.ResourceGenerator.csproj
+    - name: Publish Manager
       env:
         NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
-      run: dotnet nuget push Localizati18n.ResourceGenerator/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push src/Localizati18n.ResourceManager/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+    - name: Publish Generator
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
+      run: dotnet nuget push src/Localizati18n.ResourceGenerator/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json

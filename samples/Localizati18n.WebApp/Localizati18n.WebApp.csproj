@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>Localizati18n.IntegrationTests</RootNamespace>
 
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
         <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
@@ -20,22 +19,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </ProjectReference>
-        <ProjectReference Include="..\Localizati18n.ResourceManager\Localizati18n.ResourceManager.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="System.Globalization" Version="4.3.0" />
+      <PackageReference Include="Localizati18n.ResourceGenerator" Version="1.0.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
-    <!-- Manually reference the generator props because we locally reference the generator. When added via NuGet this happens automatically -->
-    <Import Project="..\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.props" />
-
     <ItemGroup>
-        <MySourceFiles Include="\home\curtisy\Projects\dotNet\Localizati18n\Localizati18n.IntegrationTests\obj\GeneratedFiles\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\*.cs"/>
+        <MySourceFiles Include="\home\curtisy\Projects\dotNet\Localizati18n\Localizati18n.WebApp\obj\GeneratedFiles\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\*.cs" />
     </ItemGroup>
 
     <Target Name="AfterBuild">

@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.csproj" />
+    <ProjectReference Include="..\..\src\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.csproj" />
   </ItemGroup>
 
 </Project>
