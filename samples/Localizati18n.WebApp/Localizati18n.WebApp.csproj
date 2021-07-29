@@ -20,11 +20,14 @@
 
     <ItemGroup>
       <PackageReference Include="System.Globalization" Version="4.3.0" />
-      <PackageReference Include="Localizati18n.ResourceGenerator" Version="1.0.0" />
+      <PackageReference Include="Localizati18n.ResourceGenerator" Version="1.0.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <MySourceFiles Include="\home\curtisy\Projects\dotNet\Localizati18n\Localizati18n.WebApp\obj\GeneratedFiles\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\*.cs"/>
+        <MySourceFiles Include="\home\curtisy\Projects\dotNet\Localizati18n\Localizati18n.WebApp\obj\GeneratedFiles\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\*.cs" />
     </ItemGroup>
 
     <Target Name="AfterBuild">

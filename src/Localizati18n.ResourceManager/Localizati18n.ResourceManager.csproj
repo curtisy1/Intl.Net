@@ -2,9 +2,13 @@
 
     <PropertyGroup>
         <TargetFrameworks>net5.0;net6.0;netstandard2.1</TargetFrameworks>
-        <RootNamespace>Localizati18n</RootNamespace>
         <Nullable>enable</Nullable>
         <LangVersion>9</LangVersion>
+        <Authors>curtisy1</Authors>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Description>Resource Designer Manager</Description>
+        <Version>1.0.1</Version>
+        <PackageVersion>1.0.1</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

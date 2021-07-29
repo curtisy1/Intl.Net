@@ -8,7 +8,6 @@
         <Authors>curtisy1</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Description>Resource Designer Source Generator</Description>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IncludeSymbols>false</IncludeSymbols>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -16,12 +15,6 @@
         <Version>1.0.1</Version>
         <PackageVersion>1.0.1</PackageVersion>
     </PropertyGroup>
-
-    <ItemDefinitionGroup>
-        <PackageReference>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-    </ItemDefinitionGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" />
@@ -34,7 +27,7 @@
         <ProjectReference Include="..\Localizati18n.ResourceManager\Localizati18n.ResourceManager.csproj" PrivateAssets="all" GeneratePathProperty="true" />
         <None Include="$(OutputPath)\**\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
         <None Include="$(OutputPath)\**\Localizati18n.ResourceManager.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-        <None Include="MyGenerator.props" Pack="true" PackagePath="build" Visible="false" />
+        <None Include="Localizati18n.ResourceGenerator.props" Pack="true" PackagePath="build" Visible="false" />
     </ItemGroup>
 
     <Import Project="$(MSBuildProjectName).targets" />

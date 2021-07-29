@@ -8,8 +8,10 @@ Generates strongly-typed resource classes for looking up localized strings.
 Install the [`Localizati18n.ResourceGenerator`](https://www.nuget.org/packages/Localizati18n.ResourceGenerator/) package in your resource project:
 
 ```psl
-dotnet add package Localizati18n.ResourceManager
+dotnet add package Localizati18n.ResourceGenerator
 ```
+
+Additionally you also want to install the corresponding [`ResourceManager`](https://www.nuget.org/packages/Localizati18n.ResourceManager/)
 
 Make sure to copy your JSON resource files to your output directory
 
@@ -25,3 +27,5 @@ i.e.
 By default, source generators will not persist the generated files to disk. In many cases, it's desirable to have the generated source in version control though.
 
 Luckily, there's another tag you can use. Simply add `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` to your `PropertyGroup`
+
+I haven't found a way to copy those to your project folder yet. If you know how, feel free to contribute.
