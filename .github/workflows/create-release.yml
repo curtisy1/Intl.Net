@@ -37,8 +37,8 @@ jobs:
     - name: Publish Manager
       env:
         NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
-      run: dotnet nuget push src/Localizati18n.ResourceManager/Localizati18n.ResourceManager/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push src/Localizati18n.ResourceManager/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
     - name: Publish Generator
       env:
         NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
-      run: dotnet nuget push src/Localizati18n.ResourceGenerator/Localizati18n.ResourceGenerator/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push src/Localizati18n.ResourceGenerator/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
