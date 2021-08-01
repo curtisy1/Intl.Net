@@ -15,6 +15,10 @@
         <Version>1.0.2</Version>
         <PackageVersion>1.0.2</PackageVersion>
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <Copyright>2021 curtisy1</Copyright>
+        <PackageProjectUrl>https://github.com/curtisy1/Localizati18n</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/curtisy1/Localizati18n/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/curtisy1/Localizati18n</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
