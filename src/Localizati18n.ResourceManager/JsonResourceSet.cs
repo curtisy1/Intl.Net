@@ -24,7 +24,13 @@ namespace Localizati18n.ResourceManager {
       return null;
     }
 
-    public override string? GetString(string name) => this.resources.TryGetValue(name, out var value) ? value : name;
+    public override string? GetString(string name) {
+      if (!this.resources.TryGetValue(name, out var outValue) && name.Contains('_')) {
+        this.resources.TryGetValue(name.Replace('_', '.'), out outValue);
+      }
+
+      return string.IsNullOrEmpty(outValue) ? name : outValue;
+    }
 
     protected override void ReadResources() { }
 

@@ -14,5 +14,6 @@
         public static string Farewell => ResourceManager.GetString(nameof(Farewell), ResourceCulture)!;
         public static string SampleSentence => ResourceManager.GetString(nameof(SampleSentence), ResourceCulture)!;
         public static string MultiLineSentence => ResourceManager.GetString(nameof(MultiLineSentence), ResourceCulture)!;
+        public static string Some_Weird_Key => ResourceManager.GetString(nameof(Some_Weird_Key), ResourceCulture)!;
     }
 }

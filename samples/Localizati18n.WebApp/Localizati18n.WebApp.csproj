@@ -19,17 +19,20 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Localizati18n.ResourceManager" Version="1.0.3" />
+      <PackageReference Include="Localizati18n.ResourceManager" Version="1.0.4" />
       <PackageReference Include="System.Globalization" Version="4.3.0" />
-      <PackageReference Include="Localizati18n.ResourceGenerator" Version="1.0.3">
+      <PackageReference Include="Localizati18n.ResourceGenerator" Version="1.0.4">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
-
-<!--    This is important because the compiler would complain about the duplicate file otherwise -->
+    
+    <!-- This is important because the compiler would complain about the duplicate file otherwise -->
     <Target Name="RemovePreviouslyGeneratedFile" BeforeTargets="BeforeCompile">
         <Delete Files="Localization.cs" ContinueOnError="true" />
+        
+        <!-- HACK: Create an empty file here so CSC does not miss it -->
+        <Exec Command="touch Localization.cs" />
     </Target>
 
     <Target Name="CopyGeneratedFile" AfterTargets="AfterBuild">
