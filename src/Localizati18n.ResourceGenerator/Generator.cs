@@ -65,7 +65,7 @@
                       .AddAccessorListAccessors(AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
                                                 AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(Token(SyntaxKind.SemicolonToken))));
 
-    private static MemberDeclarationSyntax CreateMember(string name, string value) =>
+    private static MemberDeclarationSyntax CreateMember(string name) =>
       PropertyDeclaration(IdentifierName("string"), name)
         .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
         .WithExpressionBody(ArrowExpressionClause(PostfixUnaryExpression(SyntaxKind.SuppressNullableWarningExpression,
@@ -81,9 +81,9 @@
                       .AddMembers(this.CreateClass()
                                     .AddMembers(members.ToArray())))
         .NormalizeWhitespace();
-
+    
     public CompilationUnitSyntax Generate() =>
       this.GetCompilationUnit(JsonSerializer.Deserialize<Dictionary<string, string>>(new StreamReader(this.resourceStream).ReadToEnd())
-                                .Select(kv => CreateMember(kv.Key, kv.Value)));
+                                .Select(kv => CreateMember(kv.Key.Replace('.', '_'))));
   }
 }
