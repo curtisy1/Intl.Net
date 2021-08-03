@@ -5,15 +5,9 @@ Generates strongly-typed resource classes for looking up localized strings.
 
 ## Usage
 
-Install the [`Localizati18n.ResourceGenerator`](https://www.nuget.org/packages/Localizati18n.ResourceGenerator/) package in your resource project:
+Install the [`Localizati18n.ResourceGenerator`](https://www.nuget.org/packages/Localizati18n.ResourceGenerator/) and [`Localizati18n.ResourceManager`](https://www.nuget.org/packages/Localizati18n.ResourceManager/) packages in your resource project:
 
-```psl
-dotnet add package Localizati18n.ResourceGenerator
-```
-
-Additionally you also want to install the corresponding [`ResourceManager`](https://www.nuget.org/packages/Localizati18n.ResourceManager/)
-
-Make sure to copy your JSON resource files to your output directory
+Make sure to copy your JSON resource files to your output directory and mark them as EmbeddedResource
 
 If you want to use a custom namespace for your resources, add a `CustomToolNamespace` tag to your embedded resource
 i.e.
@@ -25,7 +19,21 @@ i.e.
 ```
 
 By default, source generators will not persist the generated files to disk. In many cases, it's desirable to have the generated source in version control though.
+I also found that Intellisense doesn't work without it, so please do copy those files if you encounter any issues
 
 Luckily, there's another tag you can use. Simply add `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` to your `PropertyGroup`
 
-I haven't found a way to copy those to your project folder yet. If you know how, feel free to contribute.
+You can then add a `<CompilerGeneratedFilesOutputPath></CompilerGeneratedFilesOutputPath>` if desired and copy the resource file after build.
+```xml
+<!--    This is important because the compiler would complain about the duplicate file otherwise -->
+<Target Name="RemovePreviouslyGeneratedFile" BeforeTargets="BeforeCompile">
+    <Delete Files="Localization.cs" ContinueOnError="true" />
+</Target>
+
+<Target Name="CopyGeneratedFile" AfterTargets="AfterBuild">
+    <Copy SourceFiles="Generated\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\Localization.cs" DestinationFolder="$(ProjectDir)" />
+    <RemoveDir Directories="Generated" />
+</Target>
+```
+
+Note that for some reason this does not work on rebuild. If you figure out why, please submit a PR to the example project

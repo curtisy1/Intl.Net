@@ -27,6 +27,7 @@
       </PackageReference>
     </ItemGroup>
 
+<!--    This is important because the compiler would complain about the duplicate file otherwise -->
     <Target Name="RemovePreviouslyGeneratedFile" BeforeTargets="BeforeCompile">
         <Delete Files="Localization.cs" ContinueOnError="true" />
     </Target>
