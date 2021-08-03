@@ -26,10 +26,13 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
-
-<!--    This is important because the compiler would complain about the duplicate file otherwise -->
+    
+    <!-- This is important because the compiler would complain about the duplicate file otherwise -->
     <Target Name="RemovePreviouslyGeneratedFile" BeforeTargets="BeforeCompile">
         <Delete Files="Localization.cs" ContinueOnError="true" />
+        
+        <!-- HACK: Create an empty file here so CSC does not miss it -->
+        <Exec Command="touch Localization.cs" />
     </Target>
 
     <Target Name="CopyGeneratedFile" AfterTargets="AfterBuild">
