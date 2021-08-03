@@ -4,7 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
 
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
+        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,20 +19,21 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Localizati18n.ResourceManager" Version="1.0.3" />
       <PackageReference Include="System.Globalization" Version="4.3.0" />
-      <PackageReference Include="Localizati18n.ResourceGenerator" Version="1.0.0">
+      <PackageReference Include="Localizati18n.ResourceGenerator" Version="1.0.3">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
 
-    <ItemGroup>
-        <MySourceFiles Include="\home\curtisy\Projects\dotNet\Localizati18n\Localizati18n.WebApp\obj\GeneratedFiles\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\*.cs" />
-    </ItemGroup>
-
-    <Target Name="AfterBuild">
-        <Copy SourceFiles="$(MySourceFiles)" DestinationFolder="$(ProjectDir)" />
+    <Target Name="RemovePreviouslyGeneratedFile" BeforeTargets="BeforeCompile">
+        <Delete Files="Localization.cs" ContinueOnError="true" />
     </Target>
 
+    <Target Name="CopyGeneratedFile" AfterTargets="AfterBuild">
+        <Copy SourceFiles="Generated\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\Localization.cs" DestinationFolder="$(ProjectDir)" />
+        <RemoveDir Directories="Generated" />
+    </Target>
 
 </Project>
