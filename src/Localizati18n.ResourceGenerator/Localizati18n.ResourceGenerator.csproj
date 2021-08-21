@@ -12,8 +12,8 @@
         <IncludeSymbols>false</IncludeSymbols>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <DevelopmentDependency>true</DevelopmentDependency>
-        <Version>1.0.5</Version>
-        <PackageVersion>1.0.5</PackageVersion>
+        <Version>1.0.6</Version>
+        <PackageVersion>1.0.6</PackageVersion>
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
         <Copyright>2021 curtisy1</Copyright>
         <PackageProjectUrl>https://github.com/curtisy1/Localizati18n</PackageProjectUrl>

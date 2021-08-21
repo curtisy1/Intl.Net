@@ -36,12 +36,31 @@
       return resourceSet.GetString(name);
     }
 
+    public virtual JsonResourceSet? GetJsonResourceSet(CultureInfo culture, bool createIfNotExists, bool tryParents) {
+      if (this.resourceSetCache.TryGetValue(culture.Name, out var resourceSet)) {
+        return resourceSet;
+      }
+
+      if (!createIfNotExists) {
+        return null;
+      }
+
+      resourceSet = new JsonResourceSet(this.GetJsonResourceFileName(culture, tryParents));
+      this.resourceSetCache.TryAdd(culture.Name, resourceSet);
+
+      return resourceSet;
+    }
+
     protected override string GetResourceFileName(CultureInfo culture) {
+      return this.GetJsonResourceFileName(culture, true);
+    }
+
+    protected virtual string GetJsonResourceFileName(CultureInfo culture, bool tryParents = false) {
       var parentCulture = culture;
 
       while (!string.IsNullOrEmpty(parentCulture.Name)) {
         var possibleFileName = $"{this.ResourceDirectory}/{this.FileName}.{parentCulture.Name}{jsonExtension}";
-        if (File.Exists(possibleFileName)) {
+        if (File.Exists(possibleFileName) || !tryParents) {
           return possibleFileName;
         }
         

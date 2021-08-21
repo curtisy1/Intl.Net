@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net5.0;net6.0;netstandard2.1</TargetFrameworks>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>9</LangVersion>
         <Authors>curtisy1</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Description>Resource Designer Manager</Description>
-        <Version>1.0.5</Version>
-        <PackageVersion>1.0.5</PackageVersion>
+        <Version>1.0.6</Version>
+        <PackageVersion>1.0.6</PackageVersion>
         <Copyright>2021 curtisy1</Copyright>
         <PackageProjectUrl>https://github.com/curtisy1/Localizati18n</PackageProjectUrl>
         <RepositoryUrl>https://github.com/curtisy1/Localizati18n</RepositoryUrl>
