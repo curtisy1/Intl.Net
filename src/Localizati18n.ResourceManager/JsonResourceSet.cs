@@ -13,8 +13,11 @@ namespace Localizati18n.ResourceManager {
       this.FillResourceCache(stream);
     }
 
-    public JsonResourceSet(string fileName)
-      : this(File.OpenRead(fileName)) { }
+    public JsonResourceSet(string fileName) {
+      if (File.Exists(fileName)) {
+        this.FillResourceCache(File.OpenRead(fileName));
+      }
+    }
 
     public override Type GetDefaultReader() {
       return null;
@@ -30,6 +33,10 @@ namespace Localizati18n.ResourceManager {
       }
 
       return string.IsNullOrEmpty(outValue) ? name : outValue;
+    }
+
+    public IEnumerable<KeyValuePair<string, string>> GetStrings() {
+      return this.resources.ToArray();
     }
 
     protected override void ReadResources() { }
