@@ -20,6 +20,13 @@
     private const string resourceManagerVariable = "ResourceManager";
     private const string cultureInfoVariable = "ResourceCulture";
 
+    private readonly IDictionary<string, string> stringValueMap = new Dictionary<string, string> {
+      { ".", "_" },
+      { "-", "_" },
+      { "[", "_" },
+      { "]", "_" },
+    };
+
     private readonly Stream resourceStream;
     private readonly GeneratorOptions options;
 
@@ -84,6 +91,6 @@
     
     public CompilationUnitSyntax Generate() =>
       this.GetCompilationUnit(JsonSerializer.Deserialize<Dictionary<string, string>>(new StreamReader(this.resourceStream).ReadToEnd())
-                                .Select(kv => CreateMember(kv.Key.Replace('.', '_'))));
+                                .Select(kv => CreateMember(kv.Key.ReplaceAll(this.stringValueMap))));
   }
 }

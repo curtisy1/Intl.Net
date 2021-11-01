@@ -3,10 +3,17 @@ namespace Localizati18n.ResourceManager {
   using System.Collections.Concurrent;
   using System.Collections.Generic;
   using System.IO;
+  using System.Linq;
   using System.Resources;
   using System.Text.Json;
 
   public class JsonResourceSet : ResourceSet {
+    private readonly List<string> stringValueMap = new() {
+      ".",
+      "-",
+      "[",
+      "]",
+    };
     private readonly ConcurrentDictionary<string, string> resources = new();
 
     public JsonResourceSet(Stream stream) {
@@ -29,7 +36,9 @@ namespace Localizati18n.ResourceManager {
 
     public override string? GetString(string name) {
       if (!this.resources.TryGetValue(name, out var outValue) && name.Contains('_')) {
-        this.resources.TryGetValue(name.Replace('_', '.'), out outValue);
+        if (this.stringValueMap.Any(stringValue => this.resources.TryGetValue(name.Replace("_", stringValue), out outValue))) {
+          return outValue;
+        }
       }
 
       return string.IsNullOrEmpty(outValue) ? name : outValue;

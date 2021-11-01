@@ -1,5 +1,7 @@
 ﻿namespace Localizati18n.ResourceGenerator {
   using System;
+  using System.Collections;
+  using System.Collections.Generic;
   using System.Globalization;
   using System.IO;
 
@@ -10,6 +12,15 @@
       var languageName = innerExtension.TrimStart('.');
 
       return IsValidLanguageName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
+    }
+
+    public static string ReplaceAll(this string str, IDictionary<string, string> stringValueMap) {
+      var newStr = str;
+      foreach (var (key, value) in stringValueMap) {
+        newStr = newStr.Replace(key, value);
+      }
+
+      return newStr;
     }
 
     private static bool IsValidLanguageName(this string? languageName) {
