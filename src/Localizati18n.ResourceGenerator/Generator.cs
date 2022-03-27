@@ -20,13 +20,6 @@
     private const string resourceManagerVariable = "ResourceManager";
     private const string cultureInfoVariable = "ResourceCulture";
 
-    private readonly IDictionary<string, string> stringValueMap = new Dictionary<string, string> {
-      { ".", "_" },
-      { "-", "_" },
-      { "[", "_" },
-      { "]", "_" },
-    };
-
     private readonly Stream resourceStream;
     private readonly GeneratorOptions options;
 
@@ -73,12 +66,12 @@
                                                 AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(Token(SyntaxKind.SemicolonToken))));
 
     private static MemberDeclarationSyntax CreateMember(string name) =>
-      PropertyDeclaration(IdentifierName("string"), name)
+      PropertyDeclaration(IdentifierName("string"), name.SubstituteInvalidCharacters())
         .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
         .WithExpressionBody(ArrowExpressionClause(PostfixUnaryExpression(SyntaxKind.SuppressNullableWarningExpression,
                                                                          InvocationExpression(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                                                                                                                      IdentifierName(resourceManagerVariable),
-                                                                                                                     IdentifierName(nameof(JsonResourceManager.GetString)))).AddArgumentListArguments(Argument(InvocationExpression(IdentifierName("nameof")).AddArgumentListArguments(Argument(IdentifierName(name)))),
+                                                                                                                     IdentifierName(nameof(JsonResourceManager.GetString)))).AddArgumentListArguments(Argument(IdentifierName(Literal($"{name}").Text)),
                                                                                                                                                                                                   Argument(IdentifierName(cultureInfoVariable))))))
         .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
 
@@ -91,6 +84,6 @@
     
     public CompilationUnitSyntax Generate() =>
       this.GetCompilationUnit(JsonSerializer.Deserialize<Dictionary<string, string>>(new StreamReader(this.resourceStream).ReadToEnd())
-                                .Select(kv => CreateMember(kv.Key.ReplaceAll(this.stringValueMap))));
+                                .Select(kv => CreateMember(kv.Key)));
   }
 }
