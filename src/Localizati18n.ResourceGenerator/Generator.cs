@@ -5,7 +5,7 @@
   using System.IO;
   using System.Linq;
   using System.Text.Json;
-  using Localizati18n.ResourceManager;
+  using ResourceManager;
   using Microsoft.CodeAnalysis;
   using Microsoft.CodeAnalysis.CSharp;
   using Microsoft.CodeAnalysis.CSharp.Syntax;

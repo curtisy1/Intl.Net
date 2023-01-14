@@ -5,8 +5,8 @@
   using System.Reflection;
   using System.Threading.Tasks;
   using FluentAssertions;
-  using Localizati18n.ResourceGenerator.Tests.CompilationInternals;
-  using Localizati18n.ResourceGenerator.Tests.SpecialCharacters;
+  using CompilationInternals;
+  using SpecialCharacters;
   using Microsoft.CodeAnalysis;
   using Microsoft.CodeAnalysis.CSharp;
   using Microsoft.CodeAnalysis.CSharp.Syntax;
