@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Localizati18n.ResourceManager {
   using System;
   using System.Collections.Concurrent;
@@ -51,9 +53,22 @@ namespace Localizati18n.ResourceManager {
     protected override void ReadResources() { }
 
     private void FillResourceCache(Stream stream) {
-      var resourceContent = JsonSerializer.Deserialize<Dictionary<string, string>>(new StreamReader(stream).ReadToEnd());
-      foreach (var (k, v) in resourceContent) {
-        this.resources.TryAdd(k, v);
+      var resourceContentPlaceholder = string.Empty;
+      using var reader = new StreamReader(stream);
+      var line = reader.ReadLine();
+      while (!string.IsNullOrEmpty(line)) {
+        var kvp = line.Split(":");
+        var key = kvp[0];
+        // we have a composite object. Combine it
+        if (line.EndsWith('{')) {
+          resourceContentPlaceholder += "." + key;
+        } else if (!line.EndsWith("},")) {
+          key = resourceContentPlaceholder + key;
+          this.resources.TryAdd(key, string.Join("", kvp.Skip(1)));
+        } else {
+          resourceContentPlaceholder = string.Empty;
+        }
+        line = reader.ReadLine();
       }
     }
   }

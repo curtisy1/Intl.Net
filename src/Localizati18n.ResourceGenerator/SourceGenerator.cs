@@ -43,7 +43,7 @@ namespace Localizati18n.ResourceGenerator {
       }
     }
 
-    private static IEnumerable<string> FetchResourcesFromProvider(string uri, string downloadPath, GeneratorExecutionContext context) {
+    private static IEnumerable<string> FetchResourcesFromProvider(string uri, string downloadPath) {
       var files = new List<string>();
 
       using var client = new HttpClient();
@@ -51,7 +51,7 @@ namespace Localizati18n.ResourceGenerator {
       using var archive = new ZipArchive(response);
       foreach (var entry in archive.Entries) {
         using var stream = entry.Open();
-        var destination = Path.GetFullPath(Path.Combine("/home/curtisy", entry.FullName));
+        var destination = Path.GetFullPath(Path.Combine(downloadPath, entry.FullName));
 
         var directory = Path.GetDirectoryName(destination);
         if (!Directory.Exists(directory)) {
@@ -81,7 +81,7 @@ namespace Localizati18n.ResourceGenerator {
 
       var resourceFilePaths = new List<string>();
       if (context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.ResourceLocation", out var uri)) {
-        resourceFilePaths.AddRange(FetchResourcesFromProvider(uri, context.AnalyzerConfigOptions.GlobalOptions.GetValueOrDefault("build_property.ProjectDir"), context));
+        resourceFilePaths.AddRange(FetchResourcesFromProvider(uri, context.AnalyzerConfigOptions.GlobalOptions.GetValueOrDefault("build_property.ProjectDir")));
       }
 
       resourceFilePaths.AddRange(context.AdditionalFiles

@@ -81,9 +81,32 @@
                       .AddMembers(this.CreateClass()
                                     .AddMembers(members.ToArray())))
         .NormalizeWhitespace();
-    
+
+    private IEnumerable<string> ParseInputFile(Stream stream) {
+      var keys = new List<string>();
+      var resourceContentPlaceholder = string.Empty;
+      using var reader = new StreamReader(stream);
+      var line = reader.ReadLine();
+      while (!string.IsNullOrEmpty(line)) {
+        var kvp = line.Split(":");
+        var key = kvp[0];
+        // we have a composite object. Combine it
+        if (line.EndsWith('{')) {
+          resourceContentPlaceholder += "." + key;
+        } else if (!line.EndsWith("},")) {
+          key = resourceContentPlaceholder + key;
+          keys.Add(key);
+        } else {
+          resourceContentPlaceholder = string.Empty;
+        }
+        line = reader.ReadLine();
+      }
+
+      return keys.Distinct();
+    }
+
     public CompilationUnitSyntax Generate() =>
-      this.GetCompilationUnit(JsonSerializer.Deserialize<Dictionary<string, string>>(new StreamReader(this.resourceStream).ReadToEnd())
-                                .Select(kv => CreateMember(kv.Key)));
+      this.GetCompilationUnit(ParseInputFile(this.resourceStream)
+                                .Select(CreateMember));
   }
 }
