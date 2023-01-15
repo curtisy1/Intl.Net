@@ -4,6 +4,7 @@
   using System.Collections.Generic;
   using System.Globalization;
   using System.IO;
+  using System.Linq;
 
   internal static class StringExtensions {
     public static string GetBaseName(this string filePath) {
@@ -14,13 +15,15 @@
       return IsValidLanguageName(languageName) ? Path.GetFileNameWithoutExtension(name) : name;
     }
 
-    public static string ReplaceAll(this string str, IDictionary<string, string> stringValueMap) {
-      var newStr = str;
-      foreach (var (key, value) in stringValueMap) {
-        newStr = newStr.Replace(key, value);
+    public static string SubstituteInvalidCharacters(this string str) {
+      var charArr = str.ToCharArray();
+      
+      // Edge case: A declaration cannot contain only numbers
+      if (charArr.All(char.IsDigit)) {
+        return new string(charArr.Select(c => '_').ToArray());
       }
-
-      return newStr;
+      
+      return new string(charArr.Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
     }
 
     private static bool IsValidLanguageName(this string? languageName) {
