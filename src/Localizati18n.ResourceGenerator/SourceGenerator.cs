@@ -46,21 +46,27 @@ namespace Localizati18n.ResourceGenerator {
     private static IEnumerable<string> FetchResourcesFromProvider(string uri, string downloadPath) {
       var files = new List<string>();
 
-      using var client = new HttpClient();
-      using var response = client.GetStreamAsync(uri).GetAwaiter().GetResult();
-      using var archive = new ZipArchive(response);
-      foreach (var entry in archive.Entries) {
-        using var stream = entry.Open();
-        var destination = Path.GetFullPath(Path.Combine(downloadPath, entry.FullName));
+      try {
+        // source generators do not support async. This is by-design according to the Roslyn team
+        // see https://github.com/dotnet/roslyn/issues/44045 for details
+        using var client = new HttpClient();
+        using var response = client.GetStreamAsync(uri).GetAwaiter().GetResult();
+        using var archive = new ZipArchive(response);
+        foreach (var entry in archive.Entries) {
+          using var stream = entry.Open();
+          var destination = Path.GetFullPath(Path.Combine(downloadPath, entry.FullName));
 
-        var directory = Path.GetDirectoryName(destination);
-        if (!Directory.Exists(directory)) {
-          Directory.CreateDirectory(directory);
+          var directory = Path.GetDirectoryName(destination);
+          if (!Directory.Exists(directory)) {
+            Directory.CreateDirectory(directory);
+          }
+
+          using var file = new FileStream(destination, FileMode.Create, FileAccess.Write);
+          stream.CopyToAsync(file).GetAwaiter().GetResult();
+          files.Add(destination);
         }
-
-        using var file = new FileStream(destination, FileMode.Create, FileAccess.Write);
-        stream.CopyToAsync(file).GetAwaiter().GetResult();
-        files.Add(destination);
+      } catch (Exception ex) {
+        // TODO: Improve error handling by sending warning diag message
       }
 
       return files;

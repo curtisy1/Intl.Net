@@ -82,23 +82,49 @@
                                     .AddMembers(members.ToArray())))
         .NormalizeWhitespace();
 
-    private IEnumerable<string> ParseInputFile(Stream stream) {
+    private static IEnumerable<string> ParseInputFile(Stream stream) {
       var keys = new List<string>();
       var resourceContentPlaceholder = string.Empty;
+      var previousPlaceholder = string.Empty;
+      var depth = 0;
       using var reader = new StreamReader(stream);
       var line = reader.ReadLine();
       while (!string.IsNullOrEmpty(line)) {
         var kvp = line.Split(":");
-        var key = kvp[0];
+        var key = kvp[0].Trim().Replace("\"", "");
+
+        switch (key) {
+          // first line is the JSON initializer, skip this one
+          case "{":
+            line = reader.ReadLine();
+            continue;
+          case "}":
+            line = reader.ReadLine();
+            depth--;
+            continue;
+        }
+
+        // first character of key was a colon, in this case, add it back and append the second entry
+        if (string.IsNullOrEmpty(key)) {
+          key = ":" + kvp[1].Trim().Replace("\"", "");
+        }
+
         // we have a composite object. Combine it
         if (line.EndsWith('{')) {
-          resourceContentPlaceholder += "." + key;
+          if (depth > 0) {
+            previousPlaceholder = resourceContentPlaceholder;
+          }
+          
+          depth++;
+          resourceContentPlaceholder += key + ".";
         } else if (!line.EndsWith("},")) {
           key = resourceContentPlaceholder + key;
           keys.Add(key);
         } else {
-          resourceContentPlaceholder = string.Empty;
+          depth = depth != 0 ? depth - 1 : 0;
+          resourceContentPlaceholder = depth < 1 ? string.Empty : previousPlaceholder;
         }
+        
         line = reader.ReadLine();
       }
 
