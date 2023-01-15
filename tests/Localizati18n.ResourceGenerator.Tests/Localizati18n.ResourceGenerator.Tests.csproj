@@ -37,6 +37,9 @@
     <None Update="SpecialCharacters\SpecialCharacters.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="NestedTranslations\NestedTranslations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
