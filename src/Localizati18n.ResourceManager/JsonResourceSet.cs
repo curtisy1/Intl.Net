@@ -85,7 +85,8 @@ namespace Localizati18n.ResourceManager {
           resourceContentPlaceholder += key + ".";
         } else if (!line.EndsWith("},")) {
           key = resourceContentPlaceholder + key;
-          this.resources.TryAdd(key, string.Join("", kvp.Skip(1)));
+          var value = string.Join("", kvp.Skip(1)).Trim().Replace("\"", "");
+          this.resources.TryAdd(key, value[..^1]);
         } else {
           depth = depth != 0 ? depth - 1 : 0;
           resourceContentPlaceholder = depth < 1 ? string.Empty : previousPlaceholder;
