@@ -22,7 +22,7 @@
       return this.View();
     }
     
-    [HttpPost]
+    [HttpGet]
     public IActionResult SetLanguage(string language) {
       this.Response.Cookies.Append(
         CookieRequestCultureProvider.DefaultCookieName,
