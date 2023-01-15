@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Localizati18n.ResourceManager {
   using System;
   using System.Collections.Concurrent;
@@ -7,7 +5,6 @@ namespace Localizati18n.ResourceManager {
   using System.IO;
   using System.Linq;
   using System.Resources;
-  using System.Text.Json;
 
   public class JsonResourceSet : ResourceSet {
     private readonly List<string> stringValueMap = new() {

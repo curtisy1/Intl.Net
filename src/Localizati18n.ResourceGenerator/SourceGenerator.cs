@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Localizati18n.ResourceGenerator {
+﻿namespace Localizati18n.ResourceGenerator {
   using System;
   using System.Collections.Generic;
   using System.IO;
