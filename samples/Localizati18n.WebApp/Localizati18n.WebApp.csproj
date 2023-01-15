@@ -2,42 +2,44 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-
-        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="Localization.de.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-          <CustomToolNamespace>Localization</CustomToolNamespace>
         </EmbeddedResource>
         <EmbeddedResource Include="Localization.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-          <CustomToolNamespace>Localization</CustomToolNamespace>
         </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Localizati18n.ResourceManager" Version="1.0.4" />
+      <ProjectReference Include="../../src/Localizati18n.ResourceManager/Localizati18n.ResourceManager.csproj" OutputItemType="Analyzer"
+                        ReferenceOutputAssembly="true" />
       <PackageReference Include="System.Globalization" Version="4.3.0" />
-      <PackageReference Include="Localizati18n.ResourceGenerator" Version="1.0.4">
+      <ProjectReference Include="../../src/Localizati18n.ResourceGenerator/Localizati18n.ResourceGenerator.csproj" OutputItemType="Analyzer"
+                        ReferenceOutputAssembly="false" >
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
+      </ProjectReference>
     </ItemGroup>
     
-    <!-- This is important because the compiler would complain about the duplicate file otherwise -->
-    <Target Name="RemovePreviouslyGeneratedFile" BeforeTargets="BeforeCompile">
-        <Delete Files="Localization.cs" ContinueOnError="true" />
-        
-        <!-- HACK: Create an empty file here so CSC does not miss it -->
-        <Exec Command="touch Localization.cs" />
-    </Target>
+    <PropertyGroup>
+    	<!-- Update the property to include all EmbeddedResource files -->
+    	<AdditionalFileItemNames>$(AdditionalFileItemNames);EmbeddedResource</AdditionalFileItemNames>
+    </PropertyGroup>
 
-    <Target Name="CopyGeneratedFile" AfterTargets="AfterBuild">
-        <Copy SourceFiles="Generated\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\Localization.cs" DestinationFolder="$(ProjectDir)" />
-        <RemoveDir Directories="Generated" />
-    </Target>
+    <PropertyGroup>
+        <ResourceLocation>http://localhost:8085/v2/projects/export?ak=tgpak_gfpwyndcmj3ggzbsofqwgmjwonvwk33bnvswi5lemfyhc</ResourceLocation>
+        <CustomToolNamespace>Localization</CustomToolNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <CompilerVisibleProperty Include="MSBuildProjectFullPath" />
+        <CompilerVisibleProperty Include="RootNamespace" />
+        <CompilerVisibleProperty Include="CustomToolNamespace" />
+        <CompilerVisibleProperty Include="ResourceLocation" />
+        <CompilerVisibleProperty Include="ProjectDir" />
+    </ItemGroup>
 
 </Project>

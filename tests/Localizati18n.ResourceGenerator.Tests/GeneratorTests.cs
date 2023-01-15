@@ -5,25 +5,27 @@
   using System.Reflection;
   using System.Threading.Tasks;
   using FluentAssertions;
-  using Localizati18n.ResourceGenerator.Tests.CompilationInternals;
-  using Localizati18n.ResourceGenerator.Tests.SpecialCharacters;
+  using CompilationInternals;
+  using SpecialCharacters;
   using Microsoft.CodeAnalysis;
   using Microsoft.CodeAnalysis.CSharp;
   using Microsoft.CodeAnalysis.CSharp.Syntax;
   using Xunit;
 
   public class GeneratorTests {
-    [Fact]
-    public async Task Generator_HandlesSpecialCharacters() {
+    [Theory]
+    [InlineData("SpecialCharacters")]
+    [InlineData("NestedTranslations")]
+    public async Task Generator_CanHandle(string inputData) {
       var assemblyLocation = typeof(SpecialCharactersExpected).Assembly.Location;
-      var expectedClassString = await File.ReadAllTextAsync(assemblyLocation + "/../../../../SpecialCharacters/SpecialCharactersExpected.cs");
+      var expectedClassString = await File.ReadAllTextAsync(assemblyLocation + $"/../../../../{inputData}/{inputData}Expected.cs");
       
       // Create the 'input' compilation that the generator will act on
       var inputCompilation = CreateCompilation(expectedClassString);
 
       var expectedSyntaxTree = inputCompilation.SyntaxTrees.First();
 
-      var additionalTexts = new List<AdditionalText> { new TestingAdditionalText("SpecialCharacters/SpecialCharacters.json") };
+      var additionalTexts = new List<AdditionalText> { new TestingAdditionalText($"{inputData}/{inputData}.json") };
 
       // directly create an instance of the generator
       // (Note: in the compiler this is loaded from an assembly, and created via reflection at runtime)

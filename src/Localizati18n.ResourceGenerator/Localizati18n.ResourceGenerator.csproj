@@ -4,24 +4,22 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>curtisy1</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Description>Resource Designer Source Generator</Description>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <IncludeSymbols>false</IncludeSymbols>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <DevelopmentDependency>true</DevelopmentDependency>
         <Version>1.0.7</Version>
         <PackageVersion>1.0.7</PackageVersion>
-        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-        <Copyright>2021 curtisy1</Copyright>
+        <Copyright>2023 curtisy1</Copyright>
         <PackageProjectUrl>https://github.com/curtisy1/Localizati18n</PackageProjectUrl>
         <RepositoryUrl>https://github.com/curtisy1/Localizati18n</RepositoryUrl>
+        <PackageOutputPath>../../bin</PackageOutputPath>
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,11 +28,10 @@
 
     <ItemGroup>
         <PackageReference Include="System.Globalization" Version="4.3.0" />
-        <PackageReference Include="System.Text.Json" Version="6.0.2" />
+        <PackageReference Include="System.Text.Json" Version="6.0.7" />
         <ProjectReference Include="..\Localizati18n.ResourceManager\Localizati18n.ResourceManager.csproj" PrivateAssets="all" GeneratePathProperty="true" />
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
         <None Include="$(OutputPath)\Localizati18n.ResourceManager.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-        <None Include="Localizati18n.ResourceGenerator.props" Pack="true" PackagePath="build" Visible="false" />
     </ItemGroup>
 
 </Project>

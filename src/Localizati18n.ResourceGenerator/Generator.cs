@@ -4,8 +4,7 @@
   using System.Globalization;
   using System.IO;
   using System.Linq;
-  using System.Text.Json;
-  using Localizati18n.ResourceManager;
+  using ResourceManager;
   using Microsoft.CodeAnalysis;
   using Microsoft.CodeAnalysis.CSharp;
   using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -81,9 +80,58 @@
                       .AddMembers(this.CreateClass()
                                     .AddMembers(members.ToArray())))
         .NormalizeWhitespace();
-    
+
+    private static IEnumerable<string> ParseInputFile(Stream stream) {
+      var keys = new List<string>();
+      var resourceContentPlaceholder = string.Empty;
+      var previousPlaceholder = string.Empty;
+      var depth = 0;
+      using var reader = new StreamReader(stream);
+      var line = reader.ReadLine();
+      while (!string.IsNullOrEmpty(line)) {
+        var kvp = line.Split(":");
+        var key = kvp[0].Trim().Replace("\"", "");
+
+        switch (key) {
+          // first line is the JSON initializer, skip this one
+          case "{":
+            line = reader.ReadLine();
+            continue;
+          case "}":
+            line = reader.ReadLine();
+            depth--;
+            continue;
+        }
+
+        // first character of key was a colon, in this case, add it back and append the second entry
+        if (string.IsNullOrEmpty(key)) {
+          key = ":" + kvp[1].Trim().Replace("\"", "");
+        }
+
+        // we have a composite object. Combine it
+        if (line.EndsWith('{')) {
+          if (depth > 0) {
+            previousPlaceholder = resourceContentPlaceholder;
+          }
+          
+          depth++;
+          resourceContentPlaceholder += key + ".";
+        } else if (!line.EndsWith("},")) {
+          key = resourceContentPlaceholder + key;
+          keys.Add(key);
+        } else {
+          depth = depth != 0 ? depth - 1 : 0;
+          resourceContentPlaceholder = depth < 1 ? string.Empty : previousPlaceholder;
+        }
+        
+        line = reader.ReadLine();
+      }
+
+      return keys.Distinct();
+    }
+
     public CompilationUnitSyntax Generate() =>
-      this.GetCompilationUnit(JsonSerializer.Deserialize<Dictionary<string, string>>(new StreamReader(this.resourceStream).ReadToEnd())
-                                .Select(kv => CreateMember(kv.Key)));
+      this.GetCompilationUnit(ParseInputFile(this.resourceStream)
+                                .Select(CreateMember));
   }
 }

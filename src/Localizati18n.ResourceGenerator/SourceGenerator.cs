@@ -1,7 +1,10 @@
 ﻿namespace Localizati18n.ResourceGenerator {
   using System;
+  using System.Collections.Generic;
   using System.IO;
+  using System.IO.Compression;
   using System.Linq;
+  using System.Net.Http;
   using Microsoft.CodeAnalysis;
   using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -38,6 +41,35 @@
       }
     }
 
+    private static IEnumerable<string> FetchResourcesFromProvider(string uri, string downloadPath) {
+      var files = new List<string>();
+
+      try {
+        // source generators do not support async. This is by-design according to the Roslyn team
+        // see https://github.com/dotnet/roslyn/issues/44045 for details
+        using var client = new HttpClient();
+        using var response = client.GetStreamAsync(uri).GetAwaiter().GetResult();
+        using var archive = new ZipArchive(response);
+        foreach (var entry in archive.Entries) {
+          using var stream = entry.Open();
+          var destination = Path.GetFullPath(Path.Combine(downloadPath, entry.FullName));
+
+          var directory = Path.GetDirectoryName(destination);
+          if (!Directory.Exists(directory)) {
+            Directory.CreateDirectory(directory);
+          }
+
+          using var file = new FileStream(destination, FileMode.Create, FileAccess.Write);
+          stream.CopyToAsync(file).GetAwaiter().GetResult();
+          files.Add(destination);
+        }
+      } catch (Exception ex) {
+        // TODO: Improve error handling by sending warning diag message
+      }
+
+      return files;
+    }
+
     public void Execute(GeneratorExecutionContext context) {
       context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", "Starting resource generation", DiagnosticSeverity.Info, DiagnosticSeverity.Info, false, 2));
 
@@ -51,22 +83,28 @@
         return;
       }
 
-      var resourceFiles = context.AdditionalFiles
+      var resourceFilePaths = new List<string>();
+      if (context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.ResourceLocation", out var uri)) {
+        resourceFilePaths.AddRange(FetchResourcesFromProvider(uri, context.AnalyzerConfigOptions.GlobalOptions.GetValueOrDefault("build_property.ProjectDir")));
+      }
+
+      resourceFilePaths.AddRange(context.AdditionalFiles
         .Where(af => af.Path.EndsWith(".json"))
         .Where(af => Path.GetFileNameWithoutExtension(af.Path) == af.Path.GetBaseName())
-        .ToList();
+        .Select(af => af.Path)
+        .ToList());
 
-      if (!resourceFiles.Any()) {
+      if (!resourceFilePaths.Any()) {
         context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Warning", "No files found to generate resources for!", DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
       }
-      
-      foreach (var resourceFile in resourceFiles) {
-        context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", $"Generating resource from file {resourceFile.Path}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, false, 2));
-        using var stream = File.OpenRead(resourceFile.Path);
-        var customToolNamespace = context.AnalyzerConfigOptions.GetOptions(resourceFile).GetValueOrDefault("build_metadata.EmbeddedResource.CustomToolNamespace");
-        var className = Path.GetFileNameWithoutExtension(resourceFile.Path);
-        var generatedNamespace = customToolNamespace ?? GetLocalNamespace(resourceFile.Path, projectFullPath, rootNamespace);
-        
+
+      var customToolNamespace = context.AnalyzerConfigOptions.GlobalOptions.GetValueOrDefault("build_property.CustomToolNamespace");
+      foreach (var resourceFile in resourceFilePaths) {
+        context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", $"Generating resource from file {resourceFile}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, false, 2));
+        using var stream = File.OpenRead(resourceFile);
+        var className = Path.GetFileNameWithoutExtension(resourceFile);
+        var generatedNamespace = customToolNamespace ?? GetLocalNamespace(resourceFile, projectFullPath, rootNamespace);
+
         context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", $"Generating resource using namespace {generatedNamespace} and classname {className}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, false, 2));
 
         using var generator = new Generator(stream, new GeneratorOptions(generatedNamespace, className));

@@ -10,5 +10,5 @@ document.onreadystatechange = () => {
 }
 
 async function setLanguage(e) {
-  await wretch("/Home/SetLanguage").formUrl({language: e.currentTarget.value}).post();
+  await fetch(`/Home/SetLanguage?language=${e.currentTarget.value}`);
 }
