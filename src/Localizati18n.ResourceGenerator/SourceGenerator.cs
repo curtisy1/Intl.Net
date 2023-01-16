@@ -2,11 +2,10 @@
   using System;
   using System.Collections.Generic;
   using System.IO;
-  using System.IO.Compression;
   using System.Linq;
-  using System.Net.Http;
   using Microsoft.CodeAnalysis;
   using Microsoft.CodeAnalysis.Diagnostics;
+  using Plugins;
 
   internal static class AnalyzerConfigOptionsExtensions {
     public static string? GetValueOrDefault(this AnalyzerConfigOptions options, string key) => options.TryGetValue(key, out var value) ? value : null;
@@ -14,6 +13,10 @@
 
   [Generator]
   public class SourceGenerator : ISourceGenerator {
+    private readonly List<IPlugin> plugins  = new List<IPlugin> {
+      new TolgeePlugin(),
+    };
+    
     private static string GetLocalNamespace(string? resourcePath, string? projectPath, string? rootNamespace) {
       try {
         if (resourcePath is null) {
@@ -41,35 +44,6 @@
       }
     }
 
-    private static IEnumerable<string> FetchResourcesFromProvider(string uri, string downloadPath) {
-      var files = new List<string>();
-
-      try {
-        // source generators do not support async. This is by-design according to the Roslyn team
-        // see https://github.com/dotnet/roslyn/issues/44045 for details
-        using var client = new HttpClient();
-        using var response = client.GetStreamAsync(uri).GetAwaiter().GetResult();
-        using var archive = new ZipArchive(response);
-        foreach (var entry in archive.Entries) {
-          using var stream = entry.Open();
-          var destination = Path.GetFullPath(Path.Combine(downloadPath, entry.FullName));
-
-          var directory = Path.GetDirectoryName(destination);
-          if (!Directory.Exists(directory)) {
-            Directory.CreateDirectory(directory);
-          }
-
-          using var file = new FileStream(destination, FileMode.Create, FileAccess.Write);
-          stream.CopyToAsync(file).GetAwaiter().GetResult();
-          files.Add(destination);
-        }
-      } catch (Exception ex) {
-        // TODO: Improve error handling by sending warning diag message
-      }
-
-      return files;
-    }
-
     public void Execute(GeneratorExecutionContext context) {
       context.ReportDiagnostic(Diagnostic.Create("SourceGenerator", "Info", "Starting resource generation", DiagnosticSeverity.Info, DiagnosticSeverity.Info, false, 2));
 
@@ -84,10 +58,12 @@
       }
 
       var resourceFilePaths = new List<string>();
-      if (context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.ResourceLocation", out var uri)) {
-        resourceFilePaths.AddRange(FetchResourcesFromProvider(uri, context.AnalyzerConfigOptions.GlobalOptions.GetValueOrDefault("build_property.ProjectDir")));
+      foreach (var plugin in this.plugins) {
+        // source generators do not support async. This is by-design according to the Roslyn team
+        // see https://github.com/dotnet/roslyn/issues/44045 for details
+        resourceFilePaths.AddRange(plugin.FetchResources(context).GetAwaiter().GetResult());
       }
-
+      
       resourceFilePaths.AddRange(context.AdditionalFiles
         .Where(af => af.Path.EndsWith(".json"))
         .Where(af => Path.GetFileNameWithoutExtension(af.Path) == af.Path.GetBaseName())
