@@ -9,11 +9,13 @@ namespace Localizati18n.ResourceGenerator.Plugins {
   using Microsoft.CodeAnalysis;
 
   public class TolgeePlugin : PluginBase {
+    public TolgeePlugin() {
+      this.PluginName = "Tolgee";
+    }
+    
     public override async Task<IEnumerable<string>> FetchResources(GeneratorExecutionContext context) {
       var files = new List<string>();
-      var enabled = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.EnableTolgeeProvider", out _);
-      context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.ResourceUri", out var uri);
-      context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.ProjectDir", out var downloadPath);
+      var (enabled, uri, downloadPath) = this.GetConfiguredVariables(context);
       
       if (!enabled) {
         context.ReportDiagnostic(Diagnostic.Create("SourceGenerator.Plugin.Tolgee", "Info", "Tolgee plugin not enabled",
@@ -44,8 +46,7 @@ namespace Localizati18n.ResourceGenerator.Plugins {
           await stream.CopyToAsync(file);
           files.Add(destination);
         }
-      }
-      catch (Exception ex) {
+      } catch (Exception ex) {
         context.ReportDiagnostic(Diagnostic.Create("ResourceGenerator.Plugin.Tolgee", "Error", ex.Message,
           DiagnosticSeverity.Error, DiagnosticSeverity.Error, true, 0));
       }
