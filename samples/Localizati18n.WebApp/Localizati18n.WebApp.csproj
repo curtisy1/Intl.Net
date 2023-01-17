@@ -42,8 +42,4 @@
         <CompilerVisibleProperty Include="EnableTolgeeProvider" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Remove="de.json" />
-    </ItemGroup>
-
 </Project>
