@@ -1,11 +1,11 @@
-# Localizati18n
+# Intl.Net
 A ResX Globalization alternative using simple JSON Key-Value-Pairs instead of bulky XML.
 
 Generates strongly-typed resource classes for looking up localized strings.
 
 ## Usage
 
-Install the [`Localizati18n.ResourceGenerator`](https://www.nuget.org/packages/Localizati18n.ResourceGenerator/) and [`Localizati18n.ResourceManager`](https://www.nuget.org/packages/Localizati18n.ResourceManager/) packages in your resource project:
+Install the [`Intl.Net.ResourceGenerator`](https://www.nuget.org/packages/Intl.Net.ResourceGenerator/) and [`Intl.Net.ResourceManager`](https://www.nuget.org/packages/Intl.Net.ResourceManager/) packages in your resource project:
 
 Make sure to copy your JSON resource files to your output directory and mark them as EmbeddedResource
 
@@ -31,7 +31,7 @@ You can then add a `<CompilerGeneratedFilesOutputPath></CompilerGeneratedFilesOu
 </Target>
 
 <Target Name="CopyGeneratedFile" AfterTargets="AfterBuild">
-    <Copy SourceFiles="Generated\Localizati18n.ResourceGenerator\Localizati18n.ResourceGenerator.SourceGenerator\Localization.cs" DestinationFolder="$(ProjectDir)" />
+    <Copy SourceFiles="Generated\Intl.Net.ResourceGenerator\Intl.Net.ResourceGenerator.SourceGenerator\Localization.cs" DestinationFolder="$(ProjectDir)" />
     <RemoveDir Directories="Generated" />
 </Target>
 ```

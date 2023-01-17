@@ -1,7 +1,0 @@
-{
-  "Greeting": "Hallo",
-  "Thanks": "Danke",
-  "Farewell": "Auf Wiedersehen",
-  "SampleSentence": "Dies ist ein Beispielsatz",
-  "MultiLineSentence": "Dieser \n Satz <br /> sollte &ltbr /&gt über \\n mehrere Zeilen gehen"
-}
