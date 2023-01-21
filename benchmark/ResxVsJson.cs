@@ -16,28 +16,34 @@ public class ResxVsJson {
   }
 
   [Benchmark]
-  public string FirstEntryJson() => jsonManager.GetString("ivory");
+  public string FirstEntryJson() => jsonManager.GetString("calculatinggroupwarenetworkssystemsturquoise");
 
   [Benchmark]
-  public string FirstEntryResx() => resxManager.GetString("ivory");
+  public string FirstEntryResx() => resxManager.GetString("calculatinggroupwarenetworkssystemsturquoise");
 
   [Benchmark]
-  public string LastEntryJson() => jsonManager.GetString("gold");
+  public string LastEntryJson() => jsonManager.GetString("FrozenErgonomicRubberPizzaglobalfirewall");
 
   [Benchmark]
-  public string LastEntryResx() => resxManager.GetString("gold");
+  public string LastEntryResx() => resxManager.GetString("FrozenErgonomicRubberPizzaglobalfirewall");
   
   [Benchmark]
-  public string MiddleEntryJson() => jsonManager.GetString("withdrawal");
+  public string MiddleEntryJson() => jsonManager.GetString("orchidcircuitbusAgentAutoLoanAccount");
 
   [Benchmark]
-  public string MiddleEntryResx() => resxManager.GetString("withdrawal");
+  public string MiddleEntryResx() => resxManager.GetString("orchidcircuitbusAgentAutoLoanAccount");
   
   [Benchmark]
-  public (string, string) SameEntryTwiceJson() => (jsonManager.GetString("ivory"), jsonManager.GetString("ivory"));
+  public string NonExistingEntryJson() => jsonManager.GetString("abcdefghijklmnopqrstuvwxyz");
 
   [Benchmark]
-  public (string, string) SameEntryTwiceResx() => (resxManager.GetString("ivory"), resxManager.GetString("ivory"));
+  public string NonExistingEntryResx() => resxManager.GetString("abcdefghijklmnopqrstuvwxyz");
+  
+  [Benchmark]
+  public (string, string) SameEntryTwiceJson() => (jsonManager.GetString("calculatinggroupwarenetworkssystemsturquoise"), jsonManager.GetString("calculatinggroupwarenetworkssystemsturquoise"));
+
+  [Benchmark]
+  public (string, string) SameEntryTwiceResx() => (resxManager.GetString("calculatinggroupwarenetworkssystemsturquoise"), resxManager.GetString("calculatinggroupwarenetworkssystemsturquoise"));
 }
 
 public class Program {
