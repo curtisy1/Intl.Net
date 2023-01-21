@@ -1,0 +1,8 @@
+{
+  "Greeting": "Hello",
+  "Thanks": "Thank you",
+  "Farewell": "Goodbye",
+  "SampleSentence": "This is a sample sentence",
+  "MultiLineSentence": "This \n sentence <br /> should &ltbr /&gt span \\n multiple lines",
+  "Some.Weird.Key": "Some weird key.."
+}
