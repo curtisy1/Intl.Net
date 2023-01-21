@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET 6
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '6.0.x'
         include-prerelease: true
@@ -26,11 +26,7 @@ jobs:
       run: dotnet pack -c Release src/Intl.Net.ResourceManager/Intl.Net.ResourceManager.csproj
     - name: Pack Generator
       run: dotnet pack -c Release src/Intl.Net.ResourceGenerator/Intl.Net.ResourceGenerator.csproj
-    - name: Publish Manager
+    - name: Publish Releases
       env:
         NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
-      run: dotnet nuget push src/Intl.Net.ResourceManager/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
-    - name: Publish Generator
-      env:
-        NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
-      run: dotnet nuget push src/Intl.Net.ResourceGenerator/bin/Release/*.nupkg --skip-duplicate -n true -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push */bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
