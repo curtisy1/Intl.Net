@@ -25,7 +25,7 @@ public static class SpecialCharactersExpected {
   public static string _K => ResourceManager.GetString("%K", ResourceCulture)!;
   public static string _L => ResourceManager.GetString("²L", ResourceCulture)!;
   public static string _M => ResourceManager.GetString("|M", ResourceCulture)!;
-  public static string __N => ResourceManager.GetString("\\N", ResourceCulture)!;
+  public static string _N => ResourceManager.GetString("\\N", ResourceCulture)!;
   public static string _O => ResourceManager.GetString("/O", ResourceCulture)!;
   public static string _P_ => ResourceManager.GetString("{P}", ResourceCulture)!;
   public static string _Q => ResourceManager.GetString("[Q", ResourceCulture)!;
@@ -38,7 +38,7 @@ public static class SpecialCharactersExpected {
   public static string _X => ResourceManager.GetString("°X", ResourceCulture)!;
   public static string ΩY => ResourceManager.GetString("ΩY", ResourceCulture)!;
   public static string _Z => ResourceManager.GetString("_Z", ResourceCulture)!;
-  public static string _uD83D_uDCA9 => ResourceManager.GetString("💩", ResourceCulture)!;
+  public static string __ => ResourceManager.GetString("💩", ResourceCulture)!;
   public static string __ZZ => ResourceManager.GetString("😀ZZ", ResourceCulture)!;
   public static string Ω___Ŧ__ıØÞẞÐªŊŊĦŁ_______º___ => ResourceManager.GetString("Ω§€®Ŧ¥↑ıØÞẞÐªŊŊĦŁ›‹©‚‚‘’º×÷—", ResourceCulture)!;
 }

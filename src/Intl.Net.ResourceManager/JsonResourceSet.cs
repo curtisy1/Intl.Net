@@ -5,6 +5,7 @@ namespace Intl.Net.ResourceManager {
   using System.IO;
   using System.Linq;
   using System.Resources;
+  using System.Text.Json;
 
   public class JsonResourceSet : ResourceSet {
     private readonly List<string> stringValueMap = new() {
@@ -48,52 +49,27 @@ namespace Intl.Net.ResourceManager {
     }
 
     protected override void ReadResources() { }
+    
+    private void GetNameFromProperty(JsonProperty property, string parentName = "") {
+      if (property.Value.ValueKind is JsonValueKind.Array or JsonValueKind.Object) {
+        GetNameFromElement(property.Value, parentName + property.Name + ".");
+      } else {
+        this.resources.TryAdd(parentName + property.Name, property.Value.GetString());
+      }
+    }
+    
+    private void GetNameFromElement(JsonElement element, string parentName = "") {
+      if (element.ValueKind is JsonValueKind.Array) {
+        element.EnumerateArray().ToList().ForEach(el => GetNameFromElement(el, parentName));
+      } else if (element.ValueKind is JsonValueKind.Object) {
+        element.EnumerateObject().ToList().ForEach(el => GetNameFromProperty(el, parentName));
+      } else {
+        this.resources.TryAdd(parentName, element.GetString());
+      }
+    }
 
     private void FillResourceCache(Stream stream) {
-      var resourceContentPlaceholder = string.Empty;
-      var previousPlaceholder = string.Empty;
-      var depth = 0;
-      using var reader = new StreamReader(stream);
-      var line = reader.ReadLine();
-      while (!string.IsNullOrEmpty(line)) {
-        var kvp = line.Split(":");
-        var key = kvp[0].Trim().Replace("\"", "");
-
-        switch (key) {
-          // first line is the JSON initializer, skip this one
-          case "{":
-            line = reader.ReadLine();
-            continue;
-          case "}":
-            line = reader.ReadLine();
-            depth--;
-            continue;
-        }
-        
-        // first character of key was a colon, in this case, add it back and append the second entry
-        if (string.IsNullOrEmpty(key)) {
-          key = ":" + kvp[1].Trim().Replace("\"", "");
-        }
-        
-        // we have a composite object. Combine it
-        if (line.EndsWith('{')) {
-          if (depth > 0) {
-            previousPlaceholder = resourceContentPlaceholder;
-          }
-          
-          depth++;
-          resourceContentPlaceholder += key + ".";
-        } else if (!line.EndsWith("},")) {
-          key = resourceContentPlaceholder + key;
-          var value = string.Join("", kvp.Skip(1)).Trim().Replace("\"", "");
-          this.resources.TryAdd(key, value[..^1]);
-        } else {
-          depth = depth != 0 ? depth - 1 : 0;
-          resourceContentPlaceholder = depth < 1 ? string.Empty : previousPlaceholder;
-        }
-        
-        line = reader.ReadLine();
-      }
+      this.GetNameFromElement(JsonSerializer.Deserialize<JsonElement>(stream));
     }
   }
 }
