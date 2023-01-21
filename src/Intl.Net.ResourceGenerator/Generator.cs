@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Intl.Net.ResourceGenerator {
   using System;
   using System.Collections.Generic;
@@ -81,53 +83,24 @@ namespace Intl.Net.ResourceGenerator {
                                     .AddMembers(members.ToArray())))
         .NormalizeWhitespace();
 
+    private static IEnumerable<string> GetNameFromProperty(JsonProperty property, string parentName = "") {
+      return property.Value.ValueKind switch {
+        JsonValueKind.Object => GetNameFromElement(property.Value, parentName + property.Name + "."),
+        JsonValueKind.Array => GetNameFromElement(property.Value , parentName + property.Name + "."),
+        _ => new[] { parentName + property.Name }
+      };
+    }
+    
+    private static IEnumerable<string> GetNameFromElement(JsonElement element, string parentName = "") {
+      return element.ValueKind switch {
+        JsonValueKind.Object => element.EnumerateObject().SelectMany(el => GetNameFromProperty(el, parentName)),
+        JsonValueKind.Array => element.EnumerateArray().SelectMany(el => GetNameFromElement(el, parentName)),
+        _ => new[] { parentName + element.GetString() }
+      };
+    }
+
     private static IEnumerable<string> ParseInputFile(Stream stream) {
-      var keys = new List<string>();
-      var resourceContentPlaceholder = string.Empty;
-      var previousPlaceholder = string.Empty;
-      var depth = 0;
-      using var reader = new StreamReader(stream);
-      var line = reader.ReadLine();
-      while (!string.IsNullOrEmpty(line)) {
-        var kvp = line.Split(":");
-        var key = kvp[0].Trim().Replace("\"", "");
-
-        switch (key) {
-          // first line is the JSON initializer, skip this one
-          case "{":
-            line = reader.ReadLine();
-            continue;
-          case "}":
-            line = reader.ReadLine();
-            depth--;
-            continue;
-        }
-
-        // first character of key was a colon, in this case, add it back and append the second entry
-        if (string.IsNullOrEmpty(key)) {
-          key = ":" + kvp[1].Trim().Replace("\"", "");
-        }
-
-        // we have a composite object. Combine it
-        if (line.EndsWith('{')) {
-          if (depth > 0) {
-            previousPlaceholder = resourceContentPlaceholder;
-          }
-          
-          depth++;
-          resourceContentPlaceholder += key + ".";
-        } else if (!line.EndsWith("},")) {
-          key = resourceContentPlaceholder + key;
-          keys.Add(key);
-        } else {
-          depth = depth != 0 ? depth - 1 : 0;
-          resourceContentPlaceholder = depth < 1 ? string.Empty : previousPlaceholder;
-        }
-        
-        line = reader.ReadLine();
-      }
-
-      return keys.Distinct();
+      return GetNameFromElement(JsonSerializer.Deserialize<JsonElement>(stream));
     }
 
     public CompilationUnitSyntax Generate() =>

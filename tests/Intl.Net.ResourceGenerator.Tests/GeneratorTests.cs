@@ -16,6 +16,8 @@ namespace Intl.Net.ResourceGenerator.Tests {
     [Theory]
     [InlineData("SpecialCharacters")]
     [InlineData("NestedTranslations")]
+    [InlineData("TranslationArray")]
+    [InlineData("SingleTranslation")]
     public async Task Generator_CanHandle(string inputData) {
       var assemblyLocation = typeof(SpecialCharactersExpected).Assembly.Location;
       var expectedClassString = await File.ReadAllTextAsync(assemblyLocation + $"/../../../../{inputData}/{inputData}Expected.cs");
