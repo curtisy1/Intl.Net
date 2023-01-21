@@ -16,6 +16,12 @@ Make sure to copy your JSON resource files to your output directory and mark the
 
 For a list of configurable options, as well as supported i18n providers that fetch your translations from a remote API, please see the wiki pages.
 
+## Performance
+Currently, Intl.Net is just as fast as the Resx ResourceManager shipped with dotnet itself.
+In cases where trying to get a non-existing key, it is even significantly faster.
+
+For details and the benchmarks run, check the benchmarks folder.
+
 ## Related libraries
 If this library looks amazing, please do check out these similar projects and give them a star!
 
