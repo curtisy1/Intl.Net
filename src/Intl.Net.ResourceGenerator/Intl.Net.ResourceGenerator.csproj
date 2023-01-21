@@ -7,8 +7,8 @@
         <Authors>curtisy1</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Description>Resource Designer Source Generator</Description>
-        <Version>1.0.0</Version>
-        <PackageVersion>1.0.0</PackageVersion>
+        <Version>1.0.1</Version>
+        <PackageVersion>1.0.1</PackageVersion>
         <Copyright>2023 curtisy1</Copyright>
         <PackageProjectUrl>https://github.com/curtisy1/Intl.Net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/curtisy1/Intl.Net</RepositoryUrl>
