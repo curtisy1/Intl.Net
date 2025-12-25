@@ -1,3 +1,7 @@
+# Archival note
+In an effort to consolidate most of my personal repositories into a single platform, this repository won't see any more development here.
+You can find an unarchived version of the repository over on [Codeberg](https://codeberg.org/curtisy/Intl.Net)
+
 # Intl.Net
 A ResX Globalization alternative using JSON instead of bulky XML.
 
